@@ -4,7 +4,5 @@ version = "0.1.0"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 
-[dependencies]
-
 [server-dependencies]
 heatup = "boatbomber/heatup@0.1.5"

@@ -61,10 +61,11 @@ end
 
 function greedyDataService:updateValueForPlayer(player : Player, valueName : string, transformer : (any?) -> any?)
     if loadedPlayerObjects[player] then
-        return loadedPlayerObjects[player]:update(valueName, transformer), true
+        loadedPlayerObjects[player]:update(valueName, transformer)
+        return true
     else
         warn(`Attempted to transform a value for a player that does not exist (nil/{valueName}::function->transformer)`)
-        return nil, false
+        return false
     end
 end
 
