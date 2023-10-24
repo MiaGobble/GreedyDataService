@@ -71,6 +71,8 @@ end
 playersService.PlayerAdded:Connect(playerAdded)
 ```
 
+> ☝️ Key takeaway: `local leaderstatsSession = greedyDataService:loadPlayer(player)` was the only line of code needed to load and initialize the data.
+
 # Installation
 There are currently two ways to install this: Wally and Roblox File
 
