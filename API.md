@@ -136,46 +136,51 @@ In this example, four datastore values are created, and of them "Money" and "XP"
 Here is an example of a script using this structure:
 
 ```lua
+local playersService = game:GetService("Players")
+
 local greedyDataService = require(script.Parent.GreedyDataService)
 
 local function playerAdded(player : Player)
-    local leaderstatsSession = greedyDataService:loadPlayer(player)
+	local leaderstatsSession = greedyDataService:loadPlayer(player)
 
-    leaderstatsSession.data.Money = 1000 -- Sets "Money" to 1000
-    leaderstatsSession:set("XP", 500) -- Sets "XP" to 500
-    -- leaderstatsSession.data.whatever = value is the
-    -- same as leaderstatsSession:set("whatever", value)
+	leaderstatsSession.data.Money = 1000 -- Sets "Money" to 1000
+	leaderstatsSession:set("XP", 500) -- Sets "XP" to 500
+	-- leaderstatsSession.data.whatever = value is the
+	-- same as leaderstatsSession:set("whatever", value)
 
-    -- For the rest of this, instead of using methods, I'll index .data
+	-- For the rest of this, instead of using methods, I'll index .data
 
-    leaderstatsSession.data("Joins", function(lastNumberOfJoins)
+	leaderstatsSession.data("Joins", function(lastNumberOfJoins)
 		return lastNumberOfJoins + 1
 	end) -- Increments "Joins" by 1
 
-    -- You can also do leaderstatsSession.data.Joins += 1
+	-- You can also do leaderstatsSession.data.Joins += 1
 
-    if leaderstatsSession.data.Status == "new" then
-        -- If a player is new, then say they are a rookie
-        leaderstatsSession.data.Status = "rookie"
+	if leaderstatsSession.data.Status == "new" then
+		-- If a player is new, then say they are a rookie
+		leaderstatsSession.data.Status = "rookie"
 
-    elseif leaderstatsSession.data.Joins > 10 then
-        -- If they joined more than 10 times, they are a visitor!
-        leaderstatsSession.data.Status = "visitor"
+	elseif leaderstatsSession.data.Joins > 10 then
+		-- If they joined more than 10 times, they are a visitor!
+		leaderstatsSession.data.Status = "visitor"
 
-    elseif leaderstatsSession.data.Joins > 100 then
-        -- Wow, over 100 visits! They are now a regular.
-        leaderstatsSession.data.Status = "regular"
-    end
+	elseif leaderstatsSession.data.Joins > 100 then
+		-- Wow, over 100 visits! They are now a regular.
+		leaderstatsSession.data.Status = "regular"
+	end
 
-    print(leaderstatsSession:get("Status"))
-    -- Prints "rookie", "visitor", or "regular"
+	print(leaderstatsSession:get("Status"))
+	-- Prints "rookie", "visitor", or "regular"
 
-    print(leaderstatsSession.data.Status)
-    -- Should print the same thing again!
+	print(leaderstatsSession.data.Status)
+	-- Should print the same thing again!
+
+	table.insert(leaderstatsSession.data.Inventory, `DailyReward#{leaderstatsSession.data.Joins}`) -- Add something to a table
+	print(leaderstatsSession.data.Inventory) -- Will get bigger every time you join!
 end
 
 for _, player in playersService:GetPlayers() do
-    playerAdded(player)
+	playerAdded(player)
 end
 
 playersService.PlayerAdded:Connect(playerAdded)
