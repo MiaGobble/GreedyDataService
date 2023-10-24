@@ -2,7 +2,7 @@
 *A datastore solution that simplifies the player data management workflow*
 
 # About
-GreedyDataService is a simple module that allows you to easily edit player data from any server scope without any substantial datastore cooldowns (this is thanks to [boatbomber's HeatUp module](https://github.com/boatbomber/HeatUp).
+GreedyDataService is a simple module that allows you to easily edit player data from any server scope without any substantial datastore cooldowns (this is thanks to [boatbomber's HeatUp module](https://github.com/boatbomber/HeatUp)).
 
 Highlighted features:
 * Simplicity; ability to easily get and edit user data, even if they are not in the server
