@@ -48,7 +48,28 @@ function leaderstats:init()
 
     self.data = setmetatable({}, {
         __index = function(_, key)
-            return self:get(key)
+            local value = self:get(key)
+
+            if typeof(value) == "table" then
+                local copy = table.clone(value)
+
+                task.defer(function()
+                    local isTableManipulated = false
+
+                    for index, subValue in pairs(value) do
+                        if copy[index] ~= subValue then
+                            isTableManipulated = true
+                            break
+                        end
+                    end
+
+                    if isTableManipulated then
+                        self:set(key, self:get(key))
+                    end
+                end)
+            end
+
+            return value
         end,
 
         __newindex = function(_, key, value)
