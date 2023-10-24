@@ -89,7 +89,7 @@ You can download the Roblox file by going to [releases](https://github.com/MiaGo
 * Read the **[API Documentation](API.md)** to learn about how to use this.
 * The **[License](LICENSE)** describes the permissions of this resource.
 
-Here is an [uncopylocked example place](https://www.roblox.com/games/15162188714/GreedyDataService-Example) to help your understand this more!
+Here is an [uncopylocked example place](https://www.roblox.com/games/15162188714/GreedyDataService-Example) to help you understand this more!
 
 # Patreon
 If you appreciate this resource, please consider subscribing to [my Patreon page](patreon.com/igottic) for $1 a month! Everything helps and I mega-appreciate it 💖
