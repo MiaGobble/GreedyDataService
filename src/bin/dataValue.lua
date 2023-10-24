@@ -9,6 +9,7 @@ local LEADERSTATS_INSTANCE_TYPE_REMAP = {
     boolean = "BoolValue",
     table = "StringValue",
 }
+local SAVE_INCREMENT = 3
 
 type possibleDataTypes = "string" | "number" | "boolean" | "table"
 
@@ -20,9 +21,12 @@ type dataType = {
 }
 
 local httpService = game:GetService("HttpService")
+local runService = game:GetService("RunService")
 
 local heatup = require(script.Parent.Parent.packages.heatup)
 local datastore = heatup.new("greedyDataService")
+
+local queuedChanges = {}
 
 local function getEncodedAsValue(value : any) : any
     if typeof(value) ~= "string" then
@@ -40,6 +44,26 @@ local function getValueAsEncoded(value : any) : any
     else
         return value
     end
+end
+
+local function queueChange(index : string, value : any)
+    queuedChanges[index] = value
+end
+
+local function initializeQueue()
+    local lastSave = os.clock()
+
+    runService.Heartbeat:Connect(function()
+        if os.clock() - lastSave > SAVE_INCREMENT then
+            lastSave = os.clock()
+
+            for index, value in pairs(queuedChanges) do
+                datastore:Set(index, value)
+            end
+
+            queuedChanges = {}
+        end
+    end)
 end
 
 -- Constructor
@@ -61,7 +85,7 @@ function dataValue.new(dataType : dataType, userId : number)
 end
 
 function dataValue:init()
-    local encodedValue = datastore:Get(PREFIX:format(self.userId, self.valueName), self.defaultValue)
+    local encodedValue = datastore:Get(PREFIX:format(self.userId, self.valueName), self.defaultValue) or self.defaultValue
     self.currentValue = getEncodedAsValue(encodedValue)
 end
 
@@ -78,9 +102,7 @@ function dataValue:getLeaderstatsValueInstance() : StringValue | NumberValue | B
     self.leaderstatsValueInstance = valueInstance
 
     valueInstance:GetPropertyChangedSignal("Value"):Connect(function()
-        print("change")
         if valueInstance.Value ~= getValueAsEncoded(self:get()) then
-            print("update")
             self:set(valueInstance.Value)
         end
     end)
@@ -100,7 +122,12 @@ function dataValue:set(newValue : possibleDataTypes)
     local encodedValue = getValueAsEncoded(newValue)
 
     self.currentValue = newValue
-    datastore:Set(PREFIX:format(self.userId, self.valueName), encodedValue)
+
+    if self.leaderstatsValueInstance then
+        self.leaderstatsValueInstance.Value = encodedValue
+    end
+
+    queueChange(PREFIX:format(self.userId, self.valueName), encodedValue)
 end
 
 function dataValue:update(transformer : (any?) -> any?)
@@ -114,4 +141,7 @@ function dataValue:update(transformer : (any?) -> any?)
 end
 
 -- Return the class
-return dataValue
+return dataValue, initializeQueue()
+
+-- initializeQueue should return nil
+-- I just put it there to look pretty
