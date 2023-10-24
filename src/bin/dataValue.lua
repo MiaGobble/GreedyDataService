@@ -40,7 +40,9 @@ end
 
 local function getValueAsEncoded(value : any) : any
     if typeof(value) == "table" then
-        return httpService:JSONEncode(value)
+		return httpService:JSONEncode(value)
+	elseif typeof(value) == "boolean" then
+		return if value then 1 else 0
     else
         return value
     end
@@ -87,6 +89,14 @@ end
 function dataValue:init()
     local encodedValue = datastore:Get(PREFIX:format(self.userId, self.valueName), self.defaultValue) or self.defaultValue
     self.currentValue = getEncodedAsValue(encodedValue)
+
+    if self.dataType == "boolean" then
+        if self.currentValue == 1 then
+            self.currentValue = true
+        elseif self.currentValue == 0 then
+            self.currentValue = false
+        end
+    end
 end
 
 function dataValue:getLeaderstatsValueInstance() : StringValue | NumberValue | BoolValue
