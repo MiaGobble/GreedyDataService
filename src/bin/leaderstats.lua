@@ -18,6 +18,8 @@ function leaderstats.new(userId : number)
     self.leaderstatValueInstances = {}
     self.leaderstatsFolder = nil
 
+    self.data = nil
+
     self:init()
 
     return self
@@ -27,7 +29,6 @@ function leaderstats:init()
     for _, value in ipairs(dataTemplate) do
         local dataValueInstance = dataValue.new(value, self.userId)
         self.values[value.valueName] = dataValueInstance
-        print(dataValueInstance)
 
         if settings.addLeaderstatsFolder == true and self.player and value.scope == "public" then
             self.leaderstatValueInstances[value.valueName] = dataValueInstance:getLeaderstatsValueInstance()
@@ -43,6 +44,24 @@ function leaderstats:init()
             object.Parent = self.leaderstatsFolder
         end
     end
+
+    self.data = setmetatable({}, {
+        __index = function(_, key)
+            return self:get(key)
+        end,
+
+        __newindex = function(_, key, value)
+            task.spawn(function()
+                self:set(key, value)
+            end)
+        end,
+
+        __call = function(_, key, transformer)
+            task.spawn(function()
+                self:update(key, transformer)
+            end)
+        end
+    })
 end
 
 function leaderstats:get(valueName : string)

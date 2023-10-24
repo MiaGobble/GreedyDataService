@@ -8,5 +8,7 @@ return {
     public(0) "Money",
     public(0) "XP",
     private(0) "Joins",
-    private("new") "Status"
+    private("new") "Status",
+    public(true) "TestBool",
+    private({}) "Inventory",
 }

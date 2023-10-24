@@ -10,26 +10,27 @@ function player.new(playerInstance : Player)
     
     self.player = playerInstance
     self.leaderstats = leaderstats.new(playerInstance.UserId)
+    self.data = nil
+
+    self:init()
 
     return self
 end
 
 function player:init()
-    if self.leaderstats.leaderstatsFolder then
-        self.leaderstats.leaderstatsFolder.Parent = self.player
-    end
+    self.data = self.leaderstats.data
 end
 
 function player:get(valueName : string)
-    return self.leaderstats[valueName]:get()
+    return self.leaderstats:get(valueName)
 end
 
 function player:set(valueName : string, value : any)
-    self.leaderstats[valueName]:set(value)
+    self.leaderstats:set(valueName, value)
 end
 
 function player:update(valueName : string, transformer : (any) -> any)
-    self.leaderstats[valueName]:update(transformer)
+    self.leaderstats:update(valueName, transformer)
 end
 
 -- Return the class
