@@ -1,0 +1,21 @@
+{
+  "name": "GreedyDataService",
+
+  "tree": {
+    "$className": "DataModel",
+
+    "ServerScriptService": {
+      "GreedyDataService": {
+        "$path": "src",
+
+        "packages": {
+          "$path": "ServerPackages"
+        }
+      },
+
+      "Example": {
+        "$path": "example"
+      }
+    }
+  }
+}
