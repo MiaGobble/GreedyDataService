@@ -1,10 +1,19 @@
 local greedyDataService = {}
 
+local runService = game:GetService("RunService")
+
 local playerObject = require(script.bin.player)
 local leaderstats = require(script.bin.leaderstats)
 local settings = require(script.config.settings)
+local dataTemplate = require(script.config.dataTemplate)
+local dataType = require(script.config.dataTemplate.dataType)
 
 local loadedPlayerObjects = {}
+
+local function init()
+    table.insert(dataTemplate, dataType.private(false) "__SESSION_LOCKED")
+    table.insert(dataTemplate, dataType.private(0) "__LAST_SESSION")
+end
 
 function greedyDataService:loadPlayer(player : Player)
     if loadedPlayerObjects[player] then
@@ -27,13 +36,32 @@ function greedyDataService:loadPlayer(player : Player)
 
     loadedPlayerObjects[player] = playerObject.new(player)
 
-    player.AncestryChanged:Connect(function()
-        if not player:IsDescendantOf(game) then
-            loadedPlayerObjects[player] = nil
-        end
-    end)
+    if loadedPlayerObjects[player].loadCancelled then
+        loadedPlayerObjects[player] = nil
+        warn(("Player %s was kicked for an already locked session"):format(player.Name))
+        return nil
+    else
+        local lastUpdate = os.clock()
 
-    return loadedPlayerObjects[player]
+        local updateConnection = runService.Heartbeat:Connect(function()
+            if os.clock() - lastUpdate > 1 then
+                lastUpdate = os.clock()
+                loadedPlayerObjects[player]:set("__LAST_SESSION", os.time())
+            end
+        end)
+
+        player.AncestryChanged:Connect(function()
+            if not player:IsDescendantOf(game) then
+                loadedPlayerObjects[player]:unlock()
+                loadedPlayerObjects[player] = nil
+                updateConnection:Disconnect()
+            end
+        end)
+    
+        loadedPlayerObjects[player].leaderstats:lock()
+    
+        return loadedPlayerObjects[player]
+    end
 end
 
 function greedyDataService:getPlayerSession(player : Player)
@@ -73,4 +101,4 @@ function greedyDataService:getMemoryFromUserId(userId : number)
     return leaderstats.new(userId)
 end
 
-return greedyDataService
+return greedyDataService, init()

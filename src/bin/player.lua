@@ -33,5 +33,13 @@ function player:update(valueName : string, transformer : (any) -> any)
     self.leaderstats:update(valueName, transformer)
 end
 
+function player:lock()
+    self.leaderstats:lock()
+end
+
+function player:unlock()
+    self.leaderstats:unlock()
+end
+
 -- Return the class
 return player

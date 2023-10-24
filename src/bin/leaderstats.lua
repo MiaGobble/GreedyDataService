@@ -17,6 +17,7 @@ function leaderstats.new(userId : number)
     self.values = {}
     self.leaderstatValueInstances = {}
     self.leaderstatsFolder = nil
+    self.loadCancelled = false
 
     self.data = nil
 
@@ -62,6 +63,17 @@ function leaderstats:init()
             end)
         end
     })
+
+    if self.values.__SESSION_LOCKED:get() == true then
+        if os.time() - self.values.__LAST_SESSION:get() > settings.sessionTimeout then
+            self.values.__SESSION_LOCKED:set(false)
+        else
+            if self.player then
+                self.player:Kick("Session locked because your data is loaded in another server. If you continue seeing this message, please rejoin the game.")
+                self.loadCancelled = true
+            end
+        end
+    end
 end
 
 function leaderstats:get(valueName : string)
@@ -74,6 +86,14 @@ end
 
 function leaderstats:update(valueName : string, transformer : (any) -> any)
     self.values[valueName]:update(transformer)
+end
+
+function leaderstats:lock()
+    self.values.__SESSION_LOCKED:set(true)
+end
+
+function leaderstats:unlock()
+    self.values.__SESSION_LOCKED:set(false)
 end
 
 -- Return the class
