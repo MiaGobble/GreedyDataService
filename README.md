@@ -75,7 +75,7 @@ playersService.PlayerAdded:Connect(playerAdded)
 There are currently two ways to install this: Wally and Roblox File
 
 ### Wally
-Under `[server-dependencies]`, put `greedyDataService = "igottic/greedyDataService@1.0.0"`.
+*Keep an eye! This is coming to Wally soon.*
 
 ### Roblox File
 You can download the Roblox file by going to [releases](https://github.com/MiaGobble/GreedyDataService/releases).
