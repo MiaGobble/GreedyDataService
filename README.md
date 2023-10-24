@@ -23,7 +23,7 @@ Highlighted features:
 > ⚠️ This is a new resource and may be unstable. Let me know about any issues!
 
 * Feel free to forward any suggestions or ideas to the replies section of the **[DevForum post]()**.
-* Read the **[API Documentation]("API.md")** to learn about how to use this.
+* Read the **[API Documentation](API.md)** to learn about how to use this.
 * The **[License](LICENSE)** describes the permissions of this resource.
 
 # Patreon
