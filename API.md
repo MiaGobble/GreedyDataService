@@ -67,14 +67,48 @@ Get a `leaderstatsSession` with a given user id. Does not require that the playe
 
 Call this to get the value of a `leaderstatsSession`.
 
+Alternatively, you can index leaderstatsSession.data. So, for example, instead of doing:
+```lua
+local x = leaderstatsSession:get("myValue")
+```
+
+You can do
+```lua
+local x = leaderstatsSession.data.myValue
+```
+
 ### `leaderstatsSession:set(valueName : string, value : any) : any`
 * Takes a `valueName : string` and `value : any`
 * Returns a `value`
 
 Sets a data save value with the given index and value parameters. If the value type does not match the existing value type, this will throw an error.
 
+Alternatively, you can index leaderstatsSession.data. So, for example, instead of doing:
+```lua
+leaderstatsSession:set("myValue", 10)
+```
+
+You can do
+```lua
+leaderstatsSession.data.myValue = 10
+```
+
 ### `leaderstatsSession:update(valueName : string, transformer : (any) -> any)`
 Transforms a data save value with the given index and transformer function. The transformer function has an existing `value` in the parameter, and returns the updated value.
+
+Alternatively, you can index leaderstatsSession.data. So, for example, instead of doing:
+```lua
+leaderstatsSession:update("myValue", function(oldValue)
+    return oldValue + 1
+end)
+```
+
+You can do
+```lua
+leaderstatsSession.data("myValue", function(oldValue)
+    return oldValue + 1
+end)
+```
 
 # dataTemplate
 The dataTemplate is how you lay out the data to be saved.
@@ -107,28 +141,37 @@ local greedyDataService = require(script.Parent.GreedyDataService)
 local function playerAdded(player : Player)
     local leaderstatsSession = greedyDataService:loadPlayer(player)
 
-    leaderstatsSession:set("Money", 1000) -- Sets "Money" to 1000
+    leaderstatsSession.data.Money = 1000 -- Sets "Money" to 1000
     leaderstatsSession:set("XP", 500) -- Sets "XP" to 500
+    -- leaderstatsSession.data.whatever = value is the
+    -- same as leaderstatsSession:set("whatever", value)
 
-    leaderstatsSession:update("Joins", function(lastNumberOfJoins)
-        return lastNumberOfJoins + 1
-    end) -- Increments "Joins" by 1
+    -- For the rest of this, instead of using methods, I'll index .data
 
-    if leaderstatsSession:get("Status") == "new" then
+    leaderstatsSession.data("Joins", function(lastNumberOfJoins)
+		return lastNumberOfJoins + 1
+	end) -- Increments "Joins" by 1
+
+    -- You can also do leaderstatsSession.data.Joins += 1
+
+    if leaderstatsSession.data.Status == "new" then
         -- If a player is new, then say they are a rookie
-        leaderstatsSession:set("Status", "rookie")
+        leaderstatsSession.data.Status = "rookie"
 
-    elseif leaderstatsSession:get("Joins") > 10 then
+    elseif leaderstatsSession.data.Joins > 10 then
         -- If they joined more than 10 times, they are a visitor!
-        leaderstatsSession:set("Status", "visitor")
+        leaderstatsSession.data.Status = "visitor"
 
-    elseif leaderstatsSession:get("Joins") > 100 then
+    elseif leaderstatsSession.data.Joins > 100 then
         -- Wow, over 100 visits! They are now a regular.
-        leaderstatsSession:set("Status", "regular")
+        leaderstatsSession.data.Status = "regular"
     end
 
     print(leaderstatsSession:get("Status"))
     -- Prints "rookie", "visitor", or "regular"
+
+    print(leaderstatsSession.data.Status)
+    -- Should print the same thing again!
 end
 
 for _, player in playersService:GetPlayers() do
