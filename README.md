@@ -6,7 +6,6 @@ GreedyDataService is a simple module that allows you to easily edit player data 
 
 Highlighted features:
 * Simplicity; ability to easily get and edit user data, even if they are not in the server
-* Almost no cooldown; your saving limits are bound to MemoryService, not DataStoreService
 * Scalability; use in both your personal and professional projects
 * Automation for leaderstats; it can easily create leaderstat values for you, and updating the leaderstats value objects will thus update the values internally and still save (for those who use this workflow!)
 * Readability; the API is readable and easily understandable, allowing the developer(s) to quickly adjust to it
@@ -89,7 +88,9 @@ You can download the Roblox file by going to [releases](https://github.com/MiaGo
 * Read the **[API Documentation](API.md)** to learn about how to use this.
 * The **[License](LICENSE)** describes the permissions of this resource.
 
-Here is an [uncopylocked example place](https://www.roblox.com/games/15162188714/GreedyDataService-Example) to help you understand this more!
+Here is an [uncopylocked example place](https://www.roblox.com/games/15162188714/GreedyDataService-Example) to help you understand this more! Below is the YouTube video walking you through this:
+
+https://www.youtube.com/watch?v=ZhlR9H6GX2M&feature=youtu.be
 
 # Patreon
 If you appreciate this resource, please consider subscribing to [my Patreon page](patreon.com/igottic) for $1 a month! Everything helps and I mega-appreciate it 💖
